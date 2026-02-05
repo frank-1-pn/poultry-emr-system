@@ -1,0 +1,40 @@
+{
+  "name": "poultry-emr-frontend",
+  "version": "1.0.0",
+  "description": "禽病电子病历系统-微信小程序",
+  "main": "main.js",
+  "scripts": {
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "dev:h5": "uni -p h5",
+    "build:h5": "uni build -p h5",
+    "lint": "eslint --ext .js,.vue src",
+    "lint:fix": "eslint --ext .js,.vue src --fix"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "^3.0.0-4010920240507001",
+    "@dcloudio/uni-app-plus": "^3.0.0-4010920240507001",
+    "@dcloudio/uni-h5": "^3.0.0-4010920240507001",
+    "@dcloudio/uni-mp-weixin": "^3.0.0-4010920240507001",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "ali-oss": "^6.18.1"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-cli-shared": "^3.0.0-4010920240507001",
+    "@dcloudio/vite-plugin-uni": "^3.0.0-4010920240507001",
+    "vite": "^5.1.5",
+    "sass": "^1.71.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.22.0"
+  },
+  "keywords": [
+    "uni-app",
+    "微信小程序",
+    "禽病",
+    "电子病历",
+    "兽医"
+  ],
+  "author": "",
+  "license": "MIT"
+}
