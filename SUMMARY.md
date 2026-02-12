@@ -17,10 +17,15 @@
 
 2. **多AI模型支持** 🆕
    - **通义千问**（阿里云）- 推荐，中文能力强
-   - **MiniMax** - 推荐，国产模型
-   - OpenAI GPT-4 / Claude（备选）
+   - **MiniMax** - 国产模型，性价比高
+   - **Kimi**（月之暗面）- 超长上下文200K
+   - **腾讯混元** - 腾讯生态集成
+   - **ChatGPT**（OpenAI）- 综合能力最强
+   - **Claude**（Anthropic）- 逻辑推理优秀
+   - **Gemini**（Google）- 多模态能力强
+   - **DeepSeek** - 成本最低
    - Master账号统一配置和管理
-   - 支持模型切换、成本统计、使用限制
+   - 支持模型热切换、成本统计、使用限制
 
 3. **权限管理系统** 🆕
    - **Master管理员**：查看所有数据，管理用户，授权病历
@@ -75,7 +80,7 @@ Markdown部分       ← 高可读性，便于人类阅读
 
 ### 3. 数据库设计
 
-设计了**15张核心表**：
+设计了**18张核心表**：
 
 **核心表**：
 - `users` - 用户表（Master/兽医）
@@ -97,6 +102,11 @@ Markdown部分       ← 高可读性，便于人类阅读
 - `media_files` - 多媒体文件
 - `lab_tests` - 实验室检测
 - `follow_ups` - 随访
+- `record_tags` - 病历标签
+
+**系统配置表**：
+- `search_config` - 搜索配置 🆕
+- `audit_logs` - 审计日志
 
 完整设计见：[docs/database/schema.md](docs/database/schema.md)
 
@@ -185,8 +195,12 @@ AI: "好的，我记录了：
 Master配置界面
 ├─ 通义千问-最强版 ⭐ [默认]
 ├─ MiniMax-标准版
-├─ GPT-4o
-└─ Claude-Sonnet
+├─ Kimi-32K
+├─ 腾讯混元-标准版
+├─ ChatGPT GPT-4o
+├─ Claude Sonnet 4.5
+├─ Gemini 1.5 Pro
+└─ DeepSeek Chat
 
 实时监控
 ├─ 使用次数: 1,523
@@ -273,7 +287,7 @@ AI自动生成：
   ↓
 语音实时识别为文字
   ↓
-发送到通义千问/MiniMax
+发送到AI模型（通义千问/ChatGPT/Claude等）
   ↓
 AI分析提取信息
   ├─ 日期: 2026-01-26 (置信度: 95%)

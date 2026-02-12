@@ -15,6 +15,7 @@
 - **后端**: Python FastAPI + PostgreSQL + Redis
 - **存储**: 阿里云OSS
 - **AI/RAG**: LangChain + Milvus + PyTorch
+- **对话AI**: 通义千问 / MiniMax / Kimi / 腾讯混元 / ChatGPT / Claude / Gemini / DeepSeek (可配置)
 
 ## 快速开始
 
@@ -79,10 +80,12 @@ poultry-emr-system/
 ```
 
 ## 开发进度
-- [ ] Phase 1: MVP基础功能
-- [ ] Phase 2: 完善功能
-- [ ] Phase 3: AI集成
-- [ ] Phase 4: 优化迭代
+- [ ] Phase 1: MVP基础功能 (4-6周)
+- [ ] Phase 2: AI对话录入 (6-8周)
+- [ ] Phase 3: 版本管理和权限 (3-4周)
+- [ ] Phase 4: 完善功能 (4-6周)
+- [ ] Phase 5: AI高级功能 (6-8周)
+- [ ] Phase 6: 优化迭代
 
 ## 贡献指南
 欢迎提交Issue和Pull Request

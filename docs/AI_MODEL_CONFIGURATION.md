@@ -4,7 +4,7 @@
 系统支持多种AI大模型接入，由Master管理员统一配置和管理。
 
 **核心特性**：
-- ✅ 支持多种AI模型（通义千问、MiniMax、OpenAI、Claude等）
+- ✅ 支持多种AI模型（通义千问、MiniMax、Kimi、腾讯混元、ChatGPT、Claude、Gemini、DeepSeek）
 - ✅ Master后台可配置和切换模型
 - ✅ **模型热切换**：切换模型不影响对话历史和记忆
 - ✅ 对话历史与模型解耦，支持跨模型延续对话
@@ -77,16 +77,16 @@ OPENAI_CONFIG = {
 - 中文理解能力优秀
 
 **模型选择**：
-- `claude-3-opus`: 最强能力，复杂任务首选
-- `claude-3-sonnet`: 平衡选择，日常使用
-- `claude-3-haiku`: 快速响应，简单任务
+- `claude-opus-4-6`: 最强能力，复杂任务首选
+- `claude-sonnet-4-5-20250929`: 平衡选择，日常使用
+- `claude-haiku-4-5-20251001`: 快速响应，简单任务
 
 **API配置**：
 ```python
 CLAUDE_CONFIG = {
     "api_key": "sk-ant-xxxxxxxxxx",
     "base_url": "https://api.anthropic.com",
-    "model": "claude-3-sonnet-20240229",
+    "model": "claude-sonnet-4-5-20250929",
     "temperature": 0.7,
     "max_tokens": 4096,
     "timeout": 30
@@ -199,7 +199,7 @@ DEEPSEEK_CONFIG = {
 | **Kimi** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | **200K** | 低 | 低 | 超长上下文 |
 | **腾讯混元** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | 32K | 低 | 低 | 微信生态 |
 | GPT-4o | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 128K | 高 | 中 | 复杂分析 |
-| Claude-3-Sonnet | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 200K | 中 | 中 | 逻辑推理 |
+| Claude | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | 200K | 中 | 中 | 逻辑推理 |
 | **Gemini-1.5-Pro** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | **1M** | 中 | 中 | 多模态 |
 | DeepSeek | ⭐⭐⭐⭐ | ⭐⭐⭐ | 32K | 极低 | 低 | 成本敏感 |
 
@@ -463,7 +463,7 @@ export default {
       const names = {
         'qwen/qwen-plus': '通义千问',
         'openai/gpt-4o': 'GPT-4',
-        'claude/claude-3-sonnet': 'Claude'
+        'claude/claude-sonnet-4-5-20250929': 'Claude'
       }
       return names[model] || model
     }
@@ -547,7 +547,7 @@ await self.save_message(
 ```sql
 CREATE TABLE ai_models (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    provider VARCHAR(50) NOT NULL,  -- qwen, minimax, openai, claude, deepseek
+    provider VARCHAR(50) NOT NULL,  -- qwen, minimax, kimi, hunyuan, openai, claude, gemini, deepseek
     model_name VARCHAR(100) NOT NULL,  -- qwen-max, abab6-chat, gpt-4o
     display_name VARCHAR(100) NOT NULL,  -- 显示名称
     api_endpoint TEXT NOT NULL,
@@ -938,9 +938,9 @@ class ClaudeAdapter(BaseLLMAdapter):
     """Anthropic Claude适配器"""
 
     PRICING = {
-        'claude-3-opus-20240229': {'input': 0.015, 'output': 0.075},  # $/千tokens
-        'claude-3-sonnet-20240229': {'input': 0.003, 'output': 0.015},
-        'claude-3-haiku-20240307': {'input': 0.00025, 'output': 0.00125}
+        'claude-opus-4-6': {'input': 0.015, 'output': 0.075},  # $/千tokens
+        'claude-sonnet-4-5-20250929': {'input': 0.003, 'output': 0.015},
+        'claude-haiku-4-5-20251001': {'input': 0.00025, 'output': 0.00125}
     }
 
     def __init__(self, api_key: str, model_name: str, config: Dict):
@@ -1053,7 +1053,7 @@ class ClaudeAdapter(BaseLLMAdapter):
         output_tokens: int
     ) -> float:
         """计算成本（美元转人民币，按7.2汇率）"""
-        pricing = self.PRICING.get(self.model_name, self.PRICING['claude-3-sonnet-20240229'])
+        pricing = self.PRICING.get(self.model_name, self.PRICING['claude-sonnet-4-5-20250929'])
         input_cost = (input_tokens / 1000) * pricing['input']
         output_cost = (output_tokens / 1000) * pricing['output']
         return (input_cost + output_cost) * 7.2  # 转换为人民币
@@ -1151,172 +1151,6 @@ class KimiAdapter(BaseLLMAdapter):
         input_cost = (input_tokens / 1000) * pricing['input']
         output_cost = (output_tokens / 1000) * pricing['output']
         return input_cost + output_cost
-```
-
-### 腾讯混元适配器 ⭐
-```python
-import hashlib
-import hmac
-import json
-from datetime import datetime
-
-class HunyuanAdapter(BaseLLMAdapter):
-    """腾讯混元适配器"""
-
-    PRICING = {
-        'hunyuan-lite': {'input': 0.008, 'output': 0.008},    # 元/千tokens
-        'hunyuan-standard': {'input': 0.045, 'output': 0.045},
-        'hunyuan-pro': {'input': 0.1, 'output': 0.1}
-    }
-
-    def __init__(self, api_key: str, model_name: str, config: Dict):
-        # 腾讯云使用SecretId和SecretKey
-        self.secret_id = config.get('secret_id')
-        self.secret_key = api_key  # 这里api_key存储secret_key
-        self.region = config.get('region', 'ap-guangzhou')
-        self.model_name = model_name
-        self.endpoint = 'hunyuan.tencentcloudapi.com'
-        self.config = config
-
-    async def chat_completion(
-        self,
-        messages: List[Dict[str, str]],
-        functions: Optional[List[Dict]] = None,
-        stream: bool = False
-    ) -> Dict:
-        """调用腾讯混元API"""
-        try:
-            # 构建请求
-            action = 'ChatCompletions'
-            payload = {
-                'Model': self.model_name,
-                'Messages': [
-                    {'Role': msg['role'], 'Content': msg['content']}
-                    for msg in messages
-                ],
-                'Temperature': self.config.get('temperature', 0.7),
-                'TopP': self.config.get('top_p', 0.9)
-            }
-
-            # 签名和请求
-            headers = self._build_headers(action, payload)
-
-            async with httpx.AsyncClient() as client:
-                response = await client.post(
-                    f"https://{self.endpoint}",
-                    headers=headers,
-                    json=payload,
-                    timeout=30.0
-                )
-
-                data = response.json()
-
-                if 'Response' in data and 'Choices' in data['Response']:
-                    choice = data['Response']['Choices'][0]
-                    usage = data['Response'].get('Usage', {})
-
-                    return {
-                        'content': choice['Message']['Content'],
-                        'usage': {
-                            'input_tokens': usage.get('PromptTokens', 0),
-                            'output_tokens': usage.get('CompletionTokens', 0),
-                            'total_tokens': usage.get('TotalTokens', 0)
-                        }
-                    }
-                else:
-                    raise Exception(f"API返回错误: {data}")
-
-        except Exception as e:
-            raise Exception(f"腾讯混元调用错误: {str(e)}")
-
-    def _build_headers(self, action: str, payload: dict) -> dict:
-        """构建腾讯云API签名头"""
-        timestamp = int(datetime.now().timestamp())
-        date = datetime.utcnow().strftime('%Y-%m-%d')
-
-        # 简化的签名逻辑，实际使用需要完整的TC3-HMAC-SHA256签名
-        # 建议使用腾讯云SDK: tencentcloud-sdk-python
-        return {
-            'Content-Type': 'application/json',
-            'X-TC-Action': action,
-            'X-TC-Version': '2023-09-01',
-            'X-TC-Timestamp': str(timestamp),
-            'X-TC-Region': self.region,
-            'Authorization': self._sign_request(action, payload, timestamp, date)
-        }
-
-    def _sign_request(self, action: str, payload: dict, timestamp: int, date: str) -> str:
-        """TC3-HMAC-SHA256签名（简化版，生产环境建议用SDK）"""
-        # 实际实现请参考腾讯云文档
-        # https://cloud.tencent.com/document/api/1729/105701
-        pass
-
-    async def chat_completion_stream(
-        self,
-        messages: List[Dict[str, str]]
-    ) -> AsyncIterator[str]:
-        """流式响应"""
-        # 腾讯混元支持SSE流式
-        # 实现类似，设置Stream=True
-        pass
-
-    def calculate_cost(
-        self,
-        input_tokens: int,
-        output_tokens: int
-    ) -> float:
-        """计算成本"""
-        pricing = self.PRICING.get(self.model_name, self.PRICING['hunyuan-standard'])
-        input_cost = (input_tokens / 1000) * pricing['input']
-        output_cost = (output_tokens / 1000) * pricing['output']
-        return input_cost + output_cost
-```
-
-**推荐：使用腾讯云官方SDK**
-```python
-# pip install tencentcloud-sdk-python
-from tencentcloud.hunyuan.v20230901 import hunyuan_client, models
-
-class HunyuanSDKAdapter(BaseLLMAdapter):
-    """腾讯混元适配器（使用官方SDK）"""
-
-    def __init__(self, api_key: str, model_name: str, config: Dict):
-        from tencentcloud.common import credential
-        from tencentcloud.common.profile.client_profile import ClientProfile
-
-        cred = credential.Credential(
-            config.get('secret_id'),
-            api_key  # secret_key
-        )
-        client_profile = ClientProfile()
-        self.client = hunyuan_client.HunyuanClient(cred, config.get('region', 'ap-guangzhou'), client_profile)
-        self.model_name = model_name
-        self.config = config
-
-    async def chat_completion(
-        self,
-        messages: List[Dict[str, str]],
-        functions: Optional[List[Dict]] = None,
-        stream: bool = False
-    ) -> Dict:
-        """调用混元API"""
-        req = models.ChatCompletionsRequest()
-        req.Model = self.model_name
-        req.Messages = [
-            models.Message(Role=msg['role'], Content=msg['content'])
-            for msg in messages
-        ]
-
-        resp = self.client.ChatCompletions(req)
-
-        return {
-            'content': resp.Choices[0].Message.Content,
-            'usage': {
-                'input_tokens': resp.Usage.PromptTokens,
-                'output_tokens': resp.Usage.CompletionTokens,
-                'total_tokens': resp.Usage.TotalTokens
-            }
-        }
 ```
 
 ### Gemini适配器 (Google)
@@ -1438,6 +1272,80 @@ class GeminiAdapter(BaseLLMAdapter):
         return (input_cost + output_cost) * 7.2
 ```
 
+### 腾讯混元适配器
+```python
+class HunyuanAdapter(BaseLLMAdapter):
+    """腾讯混元适配器（建议使用腾讯云官方SDK: tencentcloud-sdk-python）"""
+
+    PRICING = {
+        'hunyuan-lite': {'input': 0.008, 'output': 0.008},    # 元/千tokens
+        'hunyuan-standard': {'input': 0.045, 'output': 0.045},
+        'hunyuan-pro': {'input': 0.1, 'output': 0.1}
+    }
+
+    def __init__(self, api_key: str, model_name: str, config: Dict):
+        from tencentcloud.common import credential
+        from tencentcloud.common.profile.client_profile import ClientProfile
+        from tencentcloud.hunyuan.v20230901 import hunyuan_client
+
+        cred = credential.Credential(
+            config.get('secret_id'),
+            api_key  # secret_key
+        )
+        client_profile = ClientProfile()
+        self.client = hunyuan_client.HunyuanClient(
+            cred, config.get('region', 'ap-guangzhou'), client_profile
+        )
+        self.model_name = model_name
+        self.config = config
+
+    async def chat_completion(
+        self,
+        messages: List[Dict[str, str]],
+        functions: Optional[List[Dict]] = None,
+        stream: bool = False
+    ) -> Dict:
+        """调用混元API"""
+        from tencentcloud.hunyuan.v20230901 import models
+
+        req = models.ChatCompletionsRequest()
+        req.Model = self.model_name
+        req.Messages = [
+            models.Message(Role=msg['role'], Content=msg['content'])
+            for msg in messages
+        ]
+
+        resp = self.client.ChatCompletions(req)
+
+        return {
+            'content': resp.Choices[0].Message.Content,
+            'usage': {
+                'input_tokens': resp.Usage.PromptTokens,
+                'output_tokens': resp.Usage.CompletionTokens,
+                'total_tokens': resp.Usage.TotalTokens
+            }
+        }
+
+    async def chat_completion_stream(
+        self,
+        messages: List[Dict[str, str]]
+    ) -> AsyncIterator[str]:
+        """流式响应（腾讯混元支持SSE流式）"""
+        # 设置Stream=True实现
+        pass
+
+    def calculate_cost(
+        self,
+        input_tokens: int,
+        output_tokens: int
+    ) -> float:
+        """计算成本"""
+        pricing = self.PRICING.get(self.model_name, self.PRICING['hunyuan-standard'])
+        input_cost = (input_tokens / 1000) * pricing['input']
+        output_cost = (output_tokens / 1000) * pricing['output']
+        return input_cost + output_cost
+```
+
 ### DeepSeek适配器
 ```python
 class DeepSeekAdapter(BaseLLMAdapter):
@@ -1451,7 +1359,6 @@ class DeepSeekAdapter(BaseLLMAdapter):
     def __init__(self, api_key: str, model_name: str, config: Dict):
         super().__init__(api_key, config.get('base_url', 'https://api.deepseek.com/v1'), config)
         self.model_name = model_name
-        # DeepSeek兼容OpenAI SDK
         self.client = AsyncOpenAI(
             api_key=api_key,
             base_url=self.api_endpoint,
@@ -1796,8 +1703,11 @@ export default {
       providers: [
         { value: 'qwen', name: '通义千问（阿里云）', icon: '🇨🇳' },
         { value: 'minimax', name: 'MiniMax', icon: '🇨🇳' },
+        { value: 'kimi', name: 'Kimi（月之暗面）', icon: '🇨🇳' },
+        { value: 'hunyuan', name: '腾讯混元', icon: '🇨🇳' },
         { value: 'openai', name: 'OpenAI', icon: '🇺🇸' },
         { value: 'claude', name: 'Claude', icon: '🇺🇸' },
+        { value: 'gemini', name: 'Gemini（Google）', icon: '🇺🇸' },
         { value: 'deepseek', name: 'DeepSeek', icon: '🇨🇳' }
       ],
       modelOptions: {
@@ -1858,7 +1768,7 @@ OPENAI_BASE_URL=https://api.openai.com/v1
 
 # Claude (备用)
 CLAUDE_API_KEY=sk-xxxxxxxxxx
-CLAUDE_MODEL=claude-3-sonnet-20240229
+CLAUDE_MODEL=claude-sonnet-4-5-20250929
 ```
 
 ## 成本控制
@@ -1937,6 +1847,70 @@ async def init_default_models():
 
     db.add_all([qwen_model, minimax_model])
     await db.commit()
+```
+
+## 错误处理和重试策略
+
+### 统一重试机制
+所有适配器通过装饰器实现统一的错误处理和重试逻辑：
+
+```python
+import asyncio
+from functools import wraps
+
+def with_retry(max_retries: int = 3, base_delay: float = 1.0):
+    """指数退避重试装饰器"""
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            last_exception = None
+            for attempt in range(max_retries):
+                try:
+                    return await func(*args, **kwargs)
+                except RateLimitError as e:
+                    # 限流：等待更长时间
+                    delay = base_delay * (2 ** attempt) * 2
+                    await asyncio.sleep(delay)
+                    last_exception = e
+                except TimeoutError as e:
+                    # 超时：直接重试
+                    delay = base_delay * (2 ** attempt)
+                    await asyncio.sleep(delay)
+                    last_exception = e
+                except Exception as e:
+                    # 其他错误：不重试，直接抛出
+                    raise
+            raise last_exception
+        return wrapper
+    return decorator
+```
+
+### 模型自动降级
+当主模型不可用时，自动切换到备用模型：
+
+```python
+class ModelFallbackChain:
+    """模型降级链"""
+
+    async def call_with_fallback(self, messages: list, primary_model_id: UUID) -> dict:
+        """尝试主模型，失败则降级"""
+        # 获取降级链：默认模型 -> 备用模型列表
+        fallback_chain = await self.get_fallback_chain(primary_model_id)
+
+        for model in fallback_chain:
+            try:
+                adapter = LLMAdapterFactory.create_adapter(
+                    model.provider, decrypt_api_key(model.api_key_encrypted),
+                    model.model_name, model.config
+                )
+                result = await adapter.chat_completion(messages)
+                result['model_used'] = f"{model.provider}/{model.model_name}"
+                return result
+            except Exception as e:
+                await self.log_model_error(model.id, str(e))
+                continue
+
+        raise Exception("所有AI模型均不可用，请联系管理员")
 ```
 
 ## 监控和告警

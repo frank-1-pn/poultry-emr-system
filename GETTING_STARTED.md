@@ -17,7 +17,7 @@
 - **后端**: Python FastAPI + PostgreSQL + Redis
 - **AI**: 通义千问 / MiniMax (可配置)
 - **存储**: 阿里云OSS
-- **向量数据库**: Milvus (用于RAG)
+- **向量搜索**: pgvector (PostgreSQL扩展，用于RAG语义搜索)
 
 ## 环境准备
 
@@ -67,7 +67,7 @@
 ### 1. 克隆项目（或使用现有目录）
 
 ```bash
-cd c:\Users\ke\superpowers\poultry-emr-system
+cd C:\Users\ke\poultry-emr-system
 ```
 
 ### 2. 后端设置
@@ -122,6 +122,12 @@ QWEN_MODEL=qwen-plus
 # MiniMax（可选）
 MINIMAX_API_KEY=xxxxx
 MINIMAX_GROUP_ID=xxxxx
+
+# Embedding（语义搜索）
+EMBEDDING_PROVIDER=dashscope
+EMBEDDING_MODEL=text-embedding-v1
+EMBEDDING_API_KEY=  # 留空则自动使用QWEN_API_KEY
+EMBEDDING_DIMENSIONS=1536
 
 # 微信小程序
 WECHAT_APPID=your-wechat-appid
@@ -211,27 +217,34 @@ npm run build:mp-weixin
 poultry-emr-system/
 ├── backend/                 # FastAPI后端
 │   ├── app/
-│   │   ├── api/v1/         # API路由
-│   │   ├── models/         # 数据模型
-│   │   ├── services/       # 业务逻辑
-│   │   └── core/           # 核心配置
+│   │   ├── api/v1/         # API路由 (auth, records, upload, admin, conversations, search)
+│   │   ├── adapters/       # LLM/Embedding适配器 (8个LLM + 2个Embedding)
+│   │   ├── models/         # ORM模型 (18张表)
+│   │   ├── schemas/        # Pydantic验证
+│   │   ├── services/       # 业务逻辑 (auth, record, conversation, embedding, summary...)
+│   │   ├── core/           # 核心配置 (config, database, redis, security)
+│   │   └── utils/          # 工具函数
+│   ├── alembic/            # 数据库迁移
+│   ├── scripts/            # 脚本 (generate_embeddings, seed_test_data)
+│   ├── tests/              # 测试
 │   ├── requirements.txt    # Python依赖
 │   ├── .env               # 环境变量（需创建）
 │   └── main.py            # 入口文件
 │
 ├── frontend/               # uni-app前端
-│   ├── pages/             # 页面
-│   ├── components/        # 组件
-│   ├── store/             # 状态管理
-│   └── package.json       # Node.js依赖
+│   ├── pages/             # 页面 (login, home, records, chat, sessions, reminders, profile)
+│   ├── components/        # 组件 (chat-bubble, session-card, record-card, empty-state...)
+│   ├── store/             # 状态管理 (user, records, sessions, chat, reminders)
+│   ├── utils/             # 工具 (request, auth, format)
+│   └── manifest.json      # 小程序配置
 │
 ├── docs/                   # 文档
-│   ├── PROJECT_PLAN.md               # 项目规划
-│   ├── AI_CONVERSATION_DESIGN.md     # AI对话设计
-│   ├── PERMISSIONS_DESIGN.md         # 权限管理设计
-│   ├── AI_MODEL_CONFIGURATION.md     # AI模型配置
+│   ├── PROJECT_PLAN.md
+│   ├── AI_CONVERSATION_DESIGN.md
+│   ├── PERMISSIONS_DESIGN.md
+│   ├── AI_MODEL_CONFIGURATION.md
 │   └── database/
-│       └── schema.md                 # 数据库设计
+│       └── schema.md
 │
 ├── README.md              # 项目说明
 └── GETTING_STARTED.md     # 本文件
@@ -239,50 +252,48 @@ poultry-emr-system/
 
 ## 开发流程
 
-### Phase 1: MVP基础功能
-
-**当前阶段**，需要完成：
+### Phase 1: MVP基础功能 ✅ 已完成
 
 1. **后端基础框架**
-   - [ ] FastAPI项目结构搭建
-   - [ ] 数据库连接配置
-   - [ ] JWT认证实现
-   - [ ] 用户注册/登录API
+   - [x] FastAPI项目结构搭建
+   - [x] 数据库连接配置
+   - [x] JWT认证实现
+   - [x] 用户注册/登录API
 
 2. **数据库设计**
-   - [ ] 创建所有表（users, medical_records等）
-   - [ ] 添加索引
-   - [ ] 安装PostgreSQL扩展（uuid-ossp, pgvector）
+   - [x] 创建所有表（18张，含Alembic迁移）
+   - [x] 添加索引
+   - [x] 安装PostgreSQL扩展（uuid-ossp, pgvector, pg_trgm）
 
 3. **权限系统**
-   - [ ] 角色中间件（Master/兽医）
-   - [ ] 权限验证装饰器
-   - [ ] 病历访问控制
+   - [x] 角色中间件（Master/兽医）
+   - [x] 权限验证装饰器
+   - [x] 病历访问控制
 
 4. **基础病历API**
-   - [ ] 创建病历
-   - [ ] 查询病历列表（含权限过滤）
-   - [ ] 查询病历详情
-   - [ ] 更新病历
+   - [x] 创建病历
+   - [x] 查询病历列表（含权限过滤）
+   - [x] 查询病历详情
+   - [x] 更新病历（含版本管理）
 
 5. **OSS集成**
-   - [ ] STS临时凭证生成
-   - [ ] 文件上传API
-   - [ ] 签名URL生成
+   - [x] STS临时凭证生成
+   - [x] 文件上传API
+   - [x] 签名URL生成
 
 6. **前端小程序**
-   - [ ] 登录页面
-   - [ ] 病历列表页
-   - [ ] 病历详情页
+   - [x] 登录页面
+   - [x] 病历列表页（含搜索、语义搜索）
+   - [x] 病历详情页
    - [ ] 表单录入页（基础版）
 
-### Phase 2: AI对话录入
+### Phase 2: AI对话录入 ✅ 大部分完成
 
 1. **AI模型配置**
-   - [ ] 通义千问SDK集成
-   - [ ] MiniMax SDK集成
-   - [ ] LLM适配器开发
-   - [ ] Master管理后台（AI模型配置）
+   - [x] 通义千问SDK集成
+   - [x] MiniMax SDK集成
+   - [x] LLM适配器开发（8个适配器 + 工厂模式）
+   - [x] Master管理后台（AI模型配置API）
 
 2. **语音识别**
    - [ ] 微信语音插件集成
@@ -290,42 +301,49 @@ poultry-emr-system/
    - [ ] 语音文件上传OSS
 
 3. **对话管理**
-   - [ ] WebSocket服务
-   - [ ] 对话状态管理
-   - [ ] 信息提取逻辑
-   - [ ] 置信度计算
+   - [x] WebSocket服务
+   - [x] 对话状态管理
+   - [x] 信息提取逻辑
+   - [x] 置信度计算
 
 4. **前端对话界面**
    - [ ] 语音录制组件
-   - [ ] 对话气泡展示
-   - [ ] 实时信息确认
-   - [ ] 病历预览
+   - [x] 对话气泡展示（chat-bubble组件）
+   - [x] 实时信息确认
+   - [x] 病历预览
+
+### Phase 3-5: 高级功能 ✅ 大部分完成
+
+- [x] 版本管理（创建/列表/详情/对比/回滚）
+- [x] 时间轴视图（API + 前端组件）
+- [x] 全文搜索 + 高级筛选
+- [x] 导出（PDF / Word / Excel）
+- [x] RAG语义搜索（pgvector + Embedding适配器）
+- [x] 对话内相似病例检索
+- [x] 会话摘要 + 智能续聊
+- [ ] AI辅助诊断
+- [ ] 图像识别
+- [ ] Master管理后台（Web界面）
 
 ### 下一步建议
 
-**立即可做**：
+**待开发项目**：
 
-1. **创建数据库表**
-   ```bash
-   cd backend
-   # 创建数据库初始化脚本
-   # scripts/init_db.py
-   ```
+1. **病历录入页（表单版）**
+   - 手动填写病历的表单界面
+   - 基本信息、症状、诊断、治疗方案
 
-2. **搭建FastAPI基础结构**
-   ```bash
-   # backend/main.py - 主应用
-   # backend/app/api/v1/auth.py - 认证API
-   # backend/app/models/user.py - 用户模型
-   ```
+2. **语音识别集成**
+   - 微信同声传译插件
+   - 阿里云语音识别（备选）
 
-3. **配置阿里云服务**
-   - 创建OSS Bucket
-   - 开通通义千问服务
-   - 获取API密钥
+3. **Master管理后台**
+   - Web管理界面（Vue 3 + Element Plus）
+   - 用户管理、病历管理、AI模型配置
 
-4. **创建Master账号**
-   - 手动在数据库插入或通过初始化脚本
+4. **部署上线**
+   - 服务器部署 + Nginx + HTTPS
+   - 小程序真机测试和发布
 
 ## 常用命令
 

@@ -1,0 +1,121 @@
+{
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/records/index",
+      "style": {
+        "navigationBarTitleText": "病历列表",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/records/detail",
+      "style": {
+        "navigationBarTitleText": "病历详情",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/records/create",
+      "style": {
+        "navigationBarTitleText": "新建病历",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/sessions/index",
+      "style": {
+        "navigationBarTitleText": "会话中心",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/sessions/create",
+      "style": {
+        "navigationBarTitleText": "新建会话",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/chat/index",
+      "style": {
+        "navigationBarTitleText": "AI 问诊",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/reminders/index",
+      "style": {
+        "navigationBarTitleText": "提醒",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "我的",
+        "navigationBarBackgroundColor": "#2e7d32",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "禽病诊疗",
+    "navigationBarBackgroundColor": "#2e7d32",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#2e7d32",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "static/tab/home.png",
+        "selectedIconPath": "static/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/records/index",
+        "text": "病历",
+        "iconPath": "static/tab/records.png",
+        "selectedIconPath": "static/tab/records-active.png"
+      },
+      {
+        "pagePath": "pages/reminders/index",
+        "text": "提醒",
+        "iconPath": "static/tab/bell.png",
+        "selectedIconPath": "static/tab/bell-active.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "static/tab/user.png",
+        "selectedIconPath": "static/tab/user-active.png"
+      }
+    ]
+  }
+}

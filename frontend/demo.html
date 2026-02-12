@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>禽病诊疗系统 - 界面预览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-50: #f0faf4;
+  --green-100: #d4f0e0;
+  --green-200: #a8e0c0;
+  --green-400: #4db87a;
+  --green-500: #2d9d5e;
+  --green-600: #1e7a47;
+  --green-700: #16613a;
+  --green-800: #0f4a2c;
+  --orange-400: #f5a623;
+  --orange-500: #e8941c;
+  --red-400: #e74c3c;
+  --red-500: #d63031;
+  --gray-50: #fafbfc;
+  --gray-100: #f1f3f5;
+  --gray-200: #e4e7eb;
+  --gray-300: #ced4da;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  --white: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.1);
+  --shadow-card: 0 2px 8px rgba(45,157,94,0.08);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Noto Sans SC', 'PingFang SC', -apple-system, sans-serif;
+  background: #f5f7f6;
+  color: var(--gray-800);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* === Phone Frame === */
+.phone-frame {
+  width: 390px;
+  height: 844px;
+  background: var(--white);
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.05);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.phone-notch {
+  height: 47px;
+  background: var(--white);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 4px;
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.phone-notch::before {
+  content: '';
+  width: 126px;
+  height: 28px;
+  background: var(--gray-900);
+  border-radius: 0 0 18px 18px;
+  position: absolute;
+  top: 0;
+}
+
+.phone-notch .time {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  position: absolute;
+  left: 32px;
+  bottom: 6px;
+}
+
+.phone-notch .status-icons {
+  position: absolute;
+  right: 28px;
+  bottom: 6px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.phone-notch .status-icons svg { width: 16px; height: 16px; }
+
+.phone-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.phone-home-bar {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--white);
+}
+
+.phone-home-bar::after {
+  content: '';
+  width: 134px;
+  height: 5px;
+  background: var(--gray-800);
+  border-radius: 3px;
+}
+
+/* === Page Container === */
+.page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateX(30px);
+  background: var(--gray-50);
+}
+
+.page.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateX(0);
+}
+
+.page.slide-left {
+  transform: translateX(-30px);
+}
+
+/* === Tab Bar === */
+.tab-bar {
+  display: flex;
+  background: var(--white);
+  border-top: 1px solid var(--gray-100);
+  padding: 6px 0 2px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 50;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab-item svg {
+  width: 24px;
+  height: 24px;
+  color: var(--gray-400);
+  transition: color 0.2s;
+}
+
+.tab-item span {
+  font-size: 10px;
+  color: var(--gray-400);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.tab-item.active svg { color: var(--green-500); }
+.tab-item.active span { color: var(--green-500); font-weight: 600; }
+
+.tab-item-center {
+  position: relative;
+  margin-top: -18px;
+}
+
+.tab-item-center .tab-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-400), var(--green-600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(45,157,94,0.35);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.tab-item-center .tab-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(45,157,94,0.45);
+}
+
+.tab-item-center .tab-btn svg {
+  width: 26px;
+  height: 26px;
+  color: white;
+}
+
+.tab-item-center span {
+  font-size: 10px;
+  color: var(--gray-400);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* === Login Page === */
+.login-page {
+  background: linear-gradient(160deg, var(--green-700) 0%, var(--green-800) 40%, #0a3520 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page::before {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(77,184,122,0.15) 0%, transparent 70%);
+  top: -100px;
+  right: -150px;
+}
+
+.login-page::after {
+  content: '';
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,166,35,0.08) 0%, transparent 70%);
+  bottom: 100px;
+  left: -100px;
+}
+
+.login-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.login-logo {
+  margin-top: 40px;
+  margin-bottom: 12px;
+}
+
+.login-logo svg {
+  width: 56px;
+  height: 56px;
+  color: var(--green-200);
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 8px;
+  font-weight: 300;
+}
+
+.login-form {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  height: 52px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  padding: 0 16px 0 48px;
+  font-size: 15px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  font-family: inherit;
+}
+
+.input-group input::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+
+.input-group input:focus {
+  border-color: var(--green-400);
+  background: rgba(255,255,255,0.12);
+}
+
+.input-group .input-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.35);
+}
+
+.input-group .input-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.login-btn {
+  height: 52px;
+  background: linear-gradient(135deg, var(--green-400), var(--green-500));
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: opacity 0.2s, transform 0.1s;
+  font-family: inherit;
+}
+
+.login-btn:active { transform: scale(0.98); }
+
+.login-alt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.login-alt .divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+
+.login-alt span {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+}
+
+.login-wechat {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.login-wechat button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #07c160;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.login-wechat button:hover { background: rgba(255,255,255,0.15); }
+.login-wechat button svg { width: 24px; height: 24px; }
+
+/* === Home Page === */
+.page-header {
+  padding: 12px 20px 16px;
+  background: var(--white);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-greeting {
+  font-size: 13px;
+  color: var(--gray-400);
+  font-weight: 400;
+}
+
+.header-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-top: 2px;
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-200), var(--green-400));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--green-800);
+}
+
+.home-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+/* Stats Cards */
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  right: -10px;
+  bottom: -10px;
+  opacity: 0.08;
+}
+
+.stat-card:nth-child(1)::after { background: var(--green-500); }
+.stat-card:nth-child(2)::after { background: var(--orange-400); }
+.stat-card:nth-child(3)::after { background: #3b82f6; }
+.stat-card:nth-child(4)::after { background: var(--red-400); }
+
+.stat-card .stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.stat-card .stat-icon svg { width: 18px; height: 18px; }
+
+.stat-card:nth-child(1) .stat-icon { background: var(--green-100); color: var(--green-600); }
+.stat-card:nth-child(2) .stat-icon { background: #fff3e0; color: var(--orange-500); }
+.stat-card:nth-child(3) .stat-icon { background: #e3f2fd; color: #1976d2; }
+.stat-card:nth-child(4) .stat-icon { background: #ffebee; color: var(--red-500); }
+
+.stat-number {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--gray-400);
+  margin-top: 4px;
+}
+
+/* Quick Actions */
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 12px;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 4px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.action-item:active { transform: scale(0.95); }
+
+.action-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-icon svg { width: 20px; height: 20px; }
+
+.action-item:nth-child(1) .action-icon { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); color: var(--green-600); }
+.action-item:nth-child(2) .action-icon { background: linear-gradient(135deg, #e3f2fd, #bbdefb); color: #1565c0; }
+.action-item:nth-child(3) .action-icon { background: linear-gradient(135deg, #fff3e0, #ffe0b2); color: #e65100; }
+.action-item:nth-child(4) .action-icon { background: linear-gradient(135deg, #fce4ec, #f8bbd0); color: #c62828; }
+
+.action-item span {
+  font-size: 11px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+/* Recent Records */
+.record-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.record-card:hover { box-shadow: var(--shadow-md); }
+
+.record-card.severity-severe { border-left-color: var(--red-400); }
+.record-card.severity-moderate { border-left-color: var(--orange-400); }
+.record-card.severity-mild { border-left-color: var(--green-400); }
+
+.record-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+
+.record-no {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+.severity-badge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.severity-badge.severe { background: #ffebee; color: var(--red-500); }
+.severity-badge.moderate { background: #fff3e0; color: var(--orange-500); }
+.severity-badge.mild { background: var(--green-50); color: var(--green-600); }
+
+.record-diagnosis {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 6px;
+}
+
+.record-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--gray-400);
+}
+
+.record-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.record-meta-item svg { width: 14px; height: 14px; }
+
+/* === Record List Page === */
+.search-bar {
+  padding: 12px 20px;
+  background: var(--white);
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  padding: 0 16px;
+  height: 42px;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus-within {
+  border-color: var(--green-400);
+  background: var(--white);
+}
+
+.search-input svg {
+  width: 18px;
+  height: 18px;
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+
+.search-input input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--gray-700);
+  font-family: inherit;
+}
+
+.search-input input::placeholder { color: var(--gray-300); }
+
+.filter-bar {
+  display: flex;
+  gap: 8px;
+  padding: 8px 20px;
+  background: var(--white);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-600);
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.filter-chip.active {
+  background: var(--green-500);
+  color: var(--white);
+  border-color: var(--green-500);
+}
+
+.records-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 20px;
+}
+
+.list-page-header {
+  padding: 12px 20px;
+  background: var(--white);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gray-900);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* === Semantic Search === */
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-row .search-input { flex: 1; }
+
+.search-mode-btn {
+  height: 42px;
+  padding: 0 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-500);
+  transition: all 0.2s;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.search-mode-btn.active {
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: var(--white);
+  border-color: transparent;
+}
+
+.semantic-results {
+  margin: 0 20px 8px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  border: 1px solid #e9d5ff;
+  overflow: hidden;
+}
+
+.semantic-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: #faf5ff;
+  border-bottom: 1px solid #e9d5ff;
+}
+
+.semantic-results-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #7c3aed;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.semantic-results-title svg { width: 14px; height: 14px; }
+
+.semantic-result-item {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.semantic-result-item:last-child { border-bottom: none; }
+.semantic-result-item:hover { background: var(--gray-50); }
+
+.semantic-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.semantic-result-no {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--green-600);
+}
+
+.semantic-score {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #f3e8ff;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.semantic-result-info {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 2px;
+}
+
+/* === Similar Cases Panel (Chat) === */
+.similar-cases-panel {
+  margin: 0 20px 8px;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.similar-cases-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.similar-cases-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #b45309;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.similar-cases-title svg { width: 14px; height: 14px; }
+
+.similar-cases-toggle {
+  font-size: 10px;
+  color: #92400e;
+}
+
+.similar-cases-list { padding: 0 12px 10px; }
+
+.similar-case-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-top: 1px solid rgba(180, 83, 9, 0.12);
+}
+
+.similar-case-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.similar-case-no {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--green-700);
+}
+
+.similar-case-diag {
+  font-size: 11px;
+  color: var(--gray-500);
+}
+
+.similar-case-score {
+  font-size: 11px;
+  font-weight: 700;
+  color: #b45309;
+}
+
+/* === Session Summary === */
+.session-summary {
+  font-size: 12px;
+  color: var(--gray-500);
+  line-height: 1.5;
+  padding: 6px 10px;
+  background: var(--gray-50);
+  border-radius: 6px;
+  margin-top: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* === Record Detail Page === */
+.detail-header {
+  padding: 12px 20px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.back-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.15s;
+  color: var(--gray-700);
+}
+
+.back-btn:hover { background: var(--gray-100); }
+.back-btn svg { width: 20px; height: 20px; }
+
+.detail-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--gray-900);
+  flex: 1;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.detail-actions button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--gray-500);
+  transition: background 0.15s, color 0.15s;
+}
+
+.detail-actions button:hover {
+  background: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.detail-actions button svg { width: 18px; height: 18px; }
+
+.detail-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.detail-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.detail-record-no {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.detail-version {
+  font-size: 11px;
+  background: var(--green-100);
+  color: var(--green-700);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  margin-left: auto;
+}
+
+.info-section {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+}
+
+.info-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.info-section-title svg {
+  width: 16px;
+  height: 16px;
+  color: var(--green-500);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-item.full { grid-column: 1 / -1; }
+
+.info-label {
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+.info-value {
+  font-size: 14px;
+  color: var(--gray-800);
+  font-weight: 500;
+}
+
+.symptom-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.symptom-tag {
+  font-size: 12px;
+  padding: 4px 10px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  color: var(--gray-600);
+}
+
+/* Treatment Timeline */
+.timeline {
+  position: relative;
+  padding-left: 20px;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: var(--green-100);
+}
+
+.timeline-entry {
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.timeline-entry:last-child { padding-bottom: 0; }
+
+.timeline-dot {
+  position: absolute;
+  left: -20px;
+  top: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 2.5px solid var(--green-400);
+  z-index: 1;
+}
+
+.timeline-entry.active .timeline-dot {
+  background: var(--green-400);
+  box-shadow: 0 0 0 4px rgba(77,184,122,0.15);
+}
+
+.timeline-entry.alert .timeline-dot {
+  border-color: var(--orange-400);
+}
+
+.timeline-entry.alert.active .timeline-dot {
+  background: var(--orange-400);
+  box-shadow: 0 0 0 4px rgba(245,166,35,0.15);
+}
+
+.timeline-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green-600);
+  margin-bottom: 4px;
+}
+
+.timeline-entry.alert .timeline-date {
+  color: var(--orange-500);
+}
+
+.timeline-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.timeline-desc {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.timeline-duration {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--gray-400);
+  background: var(--gray-50);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  margin-top: 4px;
+}
+
+.timeline-duration svg { width: 12px; height: 12px; }
+
+.timeline-media {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  overflow-x: auto;
+}
+
+.timeline-media-thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.15s;
+}
+
+.timeline-media-thumb:active { transform: scale(0.95); }
+
+.timeline-media-thumb.img {
+  background: linear-gradient(135deg, #e8f5e9, #dcedc8);
+}
+
+.timeline-media-thumb.video {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.timeline-media-thumb svg {
+  width: 20px;
+  height: 20px;
+}
+
+.timeline-media-thumb.img svg { color: var(--green-600); }
+.timeline-media-thumb.video svg { color: #1565c0; }
+
+.timeline-media-count {
+  font-size: 9px;
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.timeline-add-media {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  border: 1.5px dashed var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-300);
+  flex-shrink: 0;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.timeline-add-media:hover {
+  border-color: var(--green-400);
+  color: var(--green-400);
+}
+
+.timeline-add-media svg { width: 18px; height: 18px; }
+
+/* AI Reminders */
+.reminder-card {
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.reminder-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.reminder-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #fbbf24;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.reminder-icon svg { width: 14px; height: 14px; }
+
+.reminder-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #92400e;
+  flex: 1;
+}
+
+.reminder-time {
+  font-size: 11px;
+  color: #b45309;
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: #78350f;
+  line-height: 1.4;
+}
+
+.reminder-item-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.reminder-item-dot.urgent { background: var(--red-400); }
+.reminder-item-dot.normal { background: var(--orange-400); }
+.reminder-item-dot.info { background: var(--green-400); }
+
+.reminder-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.reminder-btn {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.reminder-btn.primary {
+  background: #f59e0b;
+  color: white;
+}
+
+.reminder-btn.secondary {
+  background: rgba(245,158,11,0.15);
+  color: #b45309;
+}
+
+/* Memory Badge */
+.memory-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #7c3aed;
+  background: #f3e8ff;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+}
+
+.memory-badge svg { width: 10px; height: 10px; }
+
+/* Chat Session Info */
+.chat-session-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 11px;
+  color: var(--gray-400);
+}
+
+.chat-session-bar .session-record {
+  font-weight: 500;
+  color: var(--green-600);
+  background: var(--green-50);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* === AI Chat Page === */
+.chat-header {
+  padding: 12px 20px;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.chat-header-info { flex: 1; }
+
+.chat-header-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.chat-header-status {
+  font-size: 11px;
+  color: var(--green-500);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.chat-header-status::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-400);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.chat-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-message {
+  display: flex;
+  gap: 10px;
+  max-width: 85%;
+  animation: msgIn 0.3s ease;
+}
+
+@keyframes msgIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-message.assistant { align-self: flex-start; }
+.chat-message.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.chat-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.chat-message.assistant .chat-avatar {
+  background: linear-gradient(135deg, var(--green-400), var(--green-600));
+  color: var(--white);
+}
+
+.chat-message.user .chat-avatar {
+  background: var(--gray-200);
+  color: var(--gray-600);
+}
+
+.chat-bubble {
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+}
+
+.chat-message.assistant .chat-bubble {
+  background: var(--white);
+  color: var(--gray-700);
+  border-top-left-radius: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chat-message.user .chat-bubble {
+  background: var(--green-500);
+  color: var(--white);
+  border-top-right-radius: 4px;
+}
+
+.chat-time {
+  font-size: 10px;
+  color: var(--gray-300);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.chat-message.user .chat-time { text-align: left; }
+
+.extracted-info {
+  background: var(--green-50);
+  border: 1px solid var(--green-100);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin-top: 8px;
+}
+
+.extracted-info-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--green-700);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.extracted-info-title svg { width: 12px; height: 12px; }
+
+.extracted-item {
+  font-size: 12px;
+  color: var(--green-800);
+  padding: 2px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.confidence-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.confidence-dot.high { background: var(--green-400); }
+.confidence-dot.medium { background: var(--orange-400); }
+
+/* Chat Input */
+.chat-input-bar {
+  padding: 10px 16px 10px;
+  background: var(--white);
+  border-top: 1px solid var(--gray-100);
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.chat-input-tools {
+  display: flex;
+  gap: 4px;
+}
+
+.chat-tool-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--gray-400);
+  transition: background 0.15s, color 0.15s;
+}
+
+.chat-tool-btn:hover {
+  background: var(--gray-100);
+  color: var(--gray-600);
+}
+
+.chat-tool-btn svg { width: 20px; height: 20px; }
+
+.chat-text-input {
+  flex: 1;
+  min-height: 36px;
+  max-height: 100px;
+  padding: 8px 14px;
+  border: 1px solid var(--gray-200);
+  border-radius: 20px;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  font-family: inherit;
+  color: var(--gray-700);
+  line-height: 1.4;
+  background: var(--gray-50);
+  transition: border-color 0.2s;
+}
+
+.chat-text-input:focus {
+  border-color: var(--green-400);
+  background: var(--white);
+}
+
+.chat-send-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: var(--green-500);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.chat-send-btn:hover { background: var(--green-600); }
+.chat-send-btn:active { transform: scale(0.92); }
+.chat-send-btn svg { width: 18px; height: 18px; }
+
+/* === Profile Page === */
+.profile-header-bg {
+  height: 140px;
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 0 20px 20px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--green-200), var(--green-300));
+  border: 3px solid var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--green-700);
+  box-shadow: var(--shadow-md);
+}
+
+.profile-info {
+  margin-left: 14px;
+  margin-bottom: 4px;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.profile-role {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  margin-top: 2px;
+}
+
+.profile-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.profile-stat {
+  padding: 16px 8px;
+  text-align: center;
+  border-right: 1px solid var(--gray-100);
+}
+
+.profile-stat:last-child { border-right: none; }
+
+.profile-stat-num {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+.profile-stat-label {
+  font-size: 11px;
+  color: var(--gray-400);
+  margin-top: 2px;
+}
+
+.menu-group {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gray-100);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.menu-item:last-child { border-bottom: none; }
+.menu-item:active { background: var(--gray-50); }
+
+.menu-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-icon svg { width: 16px; height: 16px; }
+
+.menu-item:nth-child(1) .menu-icon { background: #e3f2fd; color: #1976d2; }
+.menu-item:nth-child(2) .menu-icon { background: #fff3e0; color: #e65100; }
+.menu-item:nth-child(3) .menu-icon { background: #f3e5f5; color: #7b1fa2; }
+.menu-item:nth-child(4) .menu-icon { background: #e8f5e9; color: var(--green-600); }
+
+.menu-text {
+  flex: 1;
+  font-size: 14px;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.menu-arrow {
+  color: var(--gray-300);
+}
+
+.menu-arrow svg { width: 16px; height: 16px; }
+
+/* === Navigation Indicator === */
+.page-nav-hint {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--gray-800);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-lg);
+  animation: hintIn 0.5s ease 1s both;
+  white-space: nowrap;
+}
+
+@keyframes hintIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.page-nav-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<div class="phone-frame">
+  <!-- Notch -->
+  <div class="phone-notch">
+    <span class="time">9:41</span>
+    <div class="status-icons">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l5 5 5-5"/><path d="M1 1l5 5 5-5" opacity="0.3"/><path d="M1 11l5 5 5-5" opacity="0.15"/></svg>
+      <svg viewBox="0 0 24 24" fill="currentColor"><rect x="1" y="6" width="3" height="12" rx="1" opacity="0.3"/><rect x="6" y="4" width="3" height="14" rx="1" opacity="0.5"/><rect x="11" y="2" width="3" height="16" rx="1" opacity="0.7"/><rect x="16" y="0" width="3" height="18" rx="1"/></svg>
+      <svg viewBox="0 0 28 14" fill="currentColor"><rect x="0" y="1" width="22" height="12" rx="3" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="23" y="4.5" width="2" height="5" rx="1" opacity="0.4"/><rect x="2" y="3" width="14" height="8" rx="1.5" fill="var(--green-500)"/></svg>
+    </div>
+  </div>
+
+  <!-- Content Area -->
+  <div class="phone-content">
+
+    <!-- LOGIN PAGE -->
+    <div class="page login-page active" id="page-login">
+      <div class="login-content">
+        <div class="login-logo">
+          <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M24 4c-5 0-9 4-9 9 0 3 1.5 5.6 3.8 7.2L14 28l-4 12h28l-4-12-4.8-7.8C31.5 18.6 33 16 33 13c0-5-4-9-9-9z" fill="rgba(168,224,192,0.3)"/>
+            <circle cx="20" cy="12" r="1.5" fill="currentColor"/>
+            <path d="M18 16c2 2 6 2 8 0"/>
+            <path d="M15 28h18M17 33h14"/>
+          </svg>
+        </div>
+        <h1 class="login-title">禽病诊疗<br>管理系统</h1>
+        <p class="login-subtitle">Poultry EMR System · 智能化病历管理</p>
+
+        <div class="login-form">
+          <div class="input-group">
+            <div class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="3"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+            </div>
+            <input type="tel" placeholder="请输入手机号" value="138****6789">
+          </div>
+          <div class="input-group">
+            <div class="input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <input type="password" placeholder="请输入密码" value="••••••••">
+          </div>
+          <button class="login-btn" onclick="navigateTo('home')">登 录</button>
+        </div>
+
+        <div class="login-alt">
+          <div class="divider-line"></div>
+          <span>其他登录方式</span>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="login-wechat">
+          <button>
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-7.062-6.122zM14.87 13.13c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.82 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div class="page" id="page-home">
+      <div class="page-header">
+        <div class="header-top">
+          <div>
+            <div class="header-greeting">上午好</div>
+            <div class="header-name">李兽医</div>
+          </div>
+          <div class="header-avatar" onclick="switchTab('profile')">李</div>
+        </div>
+      </div>
+      <div class="home-scroll">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="stat-number">128</div>
+            <div class="stat-label">总病历数</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="stat-number">12</div>
+            <div class="stat-label">本月新增</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div class="stat-number">36</div>
+            <div class="stat-label">AI对话</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="stat-number">3</div>
+            <div class="stat-label">待关注</div>
+          </div>
+        </div>
+
+        <div class="section-title">快捷操作</div>
+        <div class="quick-actions">
+          <div class="action-item" onclick="switchTab('chat')">
+            <div class="action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <span>AI录入</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <span>搜索病历</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </div>
+            <span>导出报告</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <span>数据统计</span>
+          </div>
+        </div>
+
+        <!-- Home reminder -->
+        <div class="reminder-card">
+          <div class="reminder-header">
+            <div class="reminder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="reminder-title">今日待办 · 3项跟进</div>
+            <div class="reminder-time">08:00</div>
+          </div>
+          <div class="reminder-list">
+            <div class="reminder-item">
+              <div class="reminder-item-dot urgent"></div>
+              <span><b>PR003 新城疫</b> · 用药第3天，需观察记录</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot normal"></div>
+              <span><b>PR002 禽霍乱</b> · 复诊日，需回访养殖场</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot info"></div>
+              <span><b>PR001 大肠杆菌</b> · 疗程已结束，确认恢复</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">最近会话</div>
+        <div class="record-card" onclick="switchTab('chat')" style="border-left:3px solid var(--green-400)">
+          <div class="record-card-header">
+            <span class="record-no">会话 #3 · PR20260210003</span>
+            <span class="severity-badge" style="background:var(--green-50);color:var(--green-600);border:1px solid var(--green-100)">进行中</span>
+          </div>
+          <div class="session-summary">蛋鸡 海兰褐，新城疫疑似；治疗第3天，用药黄芪多糖+阿莫西林；今日死亡停止，采食量恢复20%</div>
+        </div>
+        <div class="record-card" style="border-left:3px solid var(--gray-300)">
+          <div class="record-card-header">
+            <span class="record-no">会话 #1 · PR20260208002</span>
+            <span class="severity-badge" style="background:var(--gray-50);color:var(--gray-500);border:1px solid var(--gray-200)">已完成</span>
+          </div>
+          <div class="session-summary">肉鸡 白羽，禽霍乱确诊；中度感染，磺胺类药物治疗5天后痊愈</div>
+        </div>
+
+        <div class="section-title">最近病历</div>
+        <div class="record-card severity-severe" onclick="showDetail()">
+          <div class="record-card-header">
+            <span class="record-no">PR20260210003</span>
+            <span class="severity-badge severe">严重</span>
+          </div>
+          <div class="record-diagnosis">新城疫疑似病例</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              蛋鸡 · 海兰褐
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-10
+            </span>
+          </div>
+        </div>
+
+        <div class="record-card severity-moderate" onclick="showDetail()">
+          <div class="record-card-header">
+            <span class="record-no">PR20260208002</span>
+            <span class="severity-badge moderate">中度</span>
+          </div>
+          <div class="record-diagnosis">禽霍乱</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              肉鸡 · 白羽
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-08
+            </span>
+          </div>
+        </div>
+
+        <div class="record-card severity-mild">
+          <div class="record-card-header">
+            <span class="record-no">PR20260205001</span>
+            <span class="severity-badge mild">轻微</span>
+          </div>
+          <div class="record-diagnosis">大肠杆菌感染</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              鸭 · 樱桃谷鸭
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-05
+            </span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+
+    <!-- RECORDS LIST PAGE -->
+    <div class="page" id="page-records">
+      <div class="list-page-header">
+        病历管理
+        <span style="font-size:12px;color:var(--gray-400);font-weight:400">共 128 条</span>
+      </div>
+      <div class="search-bar">
+        <div class="search-row">
+          <div class="search-input" style="flex:1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input-field" placeholder="搜索诊断、禽种、养殖场..." onfocus="updateSearchPlaceholder()">
+          </div>
+          <button class="search-mode-btn" id="search-mode-btn" onclick="toggleSearchMode()">关键词</button>
+        </div>
+      </div>
+      <!-- Semantic search results (shown when active) -->
+      <div class="semantic-results" id="semantic-results" style="display:none">
+        <div class="semantic-results-header">
+          <div class="semantic-results-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33"/></svg>
+            语义搜索结果
+          </div>
+          <span style="font-size:11px;color:#a78bfa">3 条匹配</span>
+        </div>
+        <div class="semantic-result-item" onclick="showDetail()">
+          <div class="semantic-result-row">
+            <span class="semantic-result-no">PR20260210003</span>
+            <span class="semantic-score">92% 相似</span>
+          </div>
+          <div class="semantic-result-info">蛋鸡 · 海兰褐 - 新城疫疑似病例</div>
+        </div>
+        <div class="semantic-result-item" onclick="showDetail()">
+          <div class="semantic-result-row">
+            <span class="semantic-result-no">PR20260115012</span>
+            <span class="semantic-score">78% 相似</span>
+          </div>
+          <div class="semantic-result-info">蛋鸡 · 罗曼灰 - 新城疫确诊</div>
+        </div>
+        <div class="semantic-result-item" onclick="showDetail()">
+          <div class="semantic-result-row">
+            <span class="semantic-result-no">PR20251228008</span>
+            <span class="semantic-score">65% 相似</span>
+          </div>
+          <div class="semantic-result-info">肉鸡 · 白羽 - 非典型新城疫</div>
+        </div>
+      </div>
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-chip active">全部</button>
+        <button class="filter-chip">鸡</button>
+        <button class="filter-chip">鸭</button>
+        <button class="filter-chip">鹅</button>
+        <button class="filter-chip">严重</button>
+        <button class="filter-chip">本月</button>
+      </div>
+      <div class="records-scroll">
+        <div class="record-card severity-severe" onclick="showDetail()">
+          <div class="record-card-header">
+            <span class="record-no">PR20260210003</span>
+            <span class="severity-badge severe">严重</span>
+          </div>
+          <div class="record-diagnosis">新城疫疑似病例</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              蛋鸡 · 海兰褐
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-10
+            </span>
+          </div>
+        </div>
+        <div class="record-card severity-moderate" onclick="showDetail()">
+          <div class="record-card-header">
+            <span class="record-no">PR20260208002</span>
+            <span class="severity-badge moderate">中度</span>
+          </div>
+          <div class="record-diagnosis">禽霍乱</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              肉鸡 · 白羽
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-08
+            </span>
+          </div>
+        </div>
+        <div class="record-card severity-mild">
+          <div class="record-card-header">
+            <span class="record-no">PR20260205001</span>
+            <span class="severity-badge mild">轻微</span>
+          </div>
+          <div class="record-diagnosis">大肠杆菌感染</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              鸭 · 樱桃谷鸭
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-05
+            </span>
+          </div>
+        </div>
+        <div class="record-card severity-moderate">
+          <div class="record-card-header">
+            <span class="record-no">PR20260203004</span>
+            <span class="severity-badge moderate">中度</span>
+          </div>
+          <div class="record-diagnosis">传染性支气管炎</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              蛋鸡 · 京红1号
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-02-03
+            </span>
+          </div>
+        </div>
+        <div class="record-card severity-mild">
+          <div class="record-card-header">
+            <span class="record-no">PR20260130005</span>
+            <span class="severity-badge mild">轻微</span>
+          </div>
+          <div class="record-diagnosis">球虫病</div>
+          <div class="record-meta">
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              肉鸡 · 科宝500
+            </span>
+            <span class="record-meta-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/></svg>
+              2026-01-30
+            </span>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+
+    <!-- RECORD DETAIL PAGE -->
+    <div class="page" id="page-detail">
+      <div class="detail-header">
+        <div class="back-btn" onclick="hideDetail()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="detail-title">病历详情</div>
+        <div class="detail-actions">
+          <button title="编辑">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </button>
+          <button title="导出">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button title="更多">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="detail-scroll">
+        <div class="detail-status-bar">
+          <span class="detail-record-no">PR20260210003</span>
+          <span class="severity-badge severe">严重</span>
+          <span class="detail-version">v1.3</span>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            基本信息
+          </div>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">禽种</span>
+              <span class="info-value">蛋鸡</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">品种</span>
+              <span class="info-value">海兰褐</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">日龄</span>
+              <span class="info-value">180天</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">发病数/总数</span>
+              <span class="info-value">450 / 5000</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">就诊日期</span>
+              <span class="info-value">2026-02-10</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">发病日期</span>
+              <span class="info-value">2026-02-07</span>
+            </div>
+            <div class="info-item full">
+              <span class="info-label">养殖场</span>
+              <span class="info-value">阳光禽业养殖场 · 山东潍坊</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            临床症状
+          </div>
+          <div class="symptom-tags">
+            <span class="symptom-tag">精神沉郁</span>
+            <span class="symptom-tag">采食量下降</span>
+            <span class="symptom-tag">产蛋率骤降</span>
+            <span class="symptom-tag">呼吸困难</span>
+            <span class="symptom-tag">绿色稀粪</span>
+            <span class="symptom-tag">头颈扭曲</span>
+            <span class="symptom-tag">死亡率升高</span>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            诊断结果
+          </div>
+          <div class="info-grid">
+            <div class="info-item full">
+              <span class="info-label">初步诊断</span>
+              <span class="info-value" style="color: var(--red-500); font-weight:600">新城疫（疑似）</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">置信度</span>
+              <span class="info-value">85%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Reminder Card -->
+        <div class="reminder-card">
+          <div class="reminder-header">
+            <div class="reminder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="reminder-title">AI 每日跟进提醒</div>
+            <div class="reminder-time">今天 08:00</div>
+          </div>
+          <div class="reminder-list">
+            <div class="reminder-item">
+              <div class="reminder-item-dot urgent"></div>
+              <span>阿莫西林疗程第3天/共5天，今日需继续饮水给药 20mg/kg，注意观察采食量恢复情况</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot urgent"></div>
+              <span>黄芪多糖注射液第3天/共5天，按 0.2ml/kg 继续注射，关注死亡率是否下降</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot normal"></div>
+              <span>环境消毒需持续执行（过氧乙酸 1:500），建议拍照记录消毒情况</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot info"></div>
+              <span>昨日送检病料预计今天出结果，注意查收实验室报告</span>
+            </div>
+          </div>
+          <div class="reminder-action">
+            <button class="reminder-btn secondary">查看完整分析</button>
+            <button class="reminder-btn primary">已确认</button>
+          </div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            治疗时间线
+          </div>
+          <div class="timeline">
+            <!-- Day 1 -->
+            <div class="timeline-entry active">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2月10日（第1天）</div>
+              <div class="timeline-title">紧急隔离 + 首次诊治</div>
+              <div class="timeline-desc">患病鸡群隔离至3号舍，封锁鸡舍入口。对健康鸡群紧急接种新城疫IV系疫苗（点眼/滴鼻，2倍剂量）。</div>
+              <div class="timeline-duration">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                当日完成
+              </div>
+              <div class="timeline-media">
+                <div class="timeline-media-thumb img">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <span class="timeline-media-count">3张</span>
+                </div>
+                <div class="timeline-media-thumb video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span class="timeline-media-count">1个</span>
+                </div>
+                <div class="timeline-add-media">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day 2 -->
+            <div class="timeline-entry active">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2月11日（第2天）</div>
+              <div class="timeline-title">开始抗生素 + 抗病毒治疗</div>
+              <div class="timeline-desc">黄芪多糖注射液 0.2ml/kg 肌注，阿莫西林 20mg/kg 饮水给药。过氧乙酸 1:500 带鸡喷雾消毒，每日2次。</div>
+              <div class="timeline-duration">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                连续5天（至2月15日）
+              </div>
+              <div class="timeline-media">
+                <div class="timeline-media-thumb img">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <span class="timeline-media-count">2张</span>
+                </div>
+                <div class="timeline-add-media">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Day 3 - current -->
+            <div class="timeline-entry alert active">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date">2月12日（第3天）· 今日</div>
+              <div class="timeline-title">持续用药 + 等待检验结果</div>
+              <div class="timeline-desc">继续黄芪多糖+阿莫西林治疗方案。昨日送检病料预计今日出结果。观察到死亡数从12只降至5只，采食量略有恢复。</div>
+              <div class="timeline-duration">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                进行中 · 用药第2天
+              </div>
+              <div class="timeline-media">
+                <div class="timeline-media-thumb img">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  <span class="timeline-media-count">1张</span>
+                </div>
+                <div class="timeline-media-thumb video">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span class="timeline-media-count">1个</span>
+                </div>
+                <div class="timeline-add-media">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Future - Day 6 -->
+            <div class="timeline-entry">
+              <div class="timeline-dot"></div>
+              <div class="timeline-date" style="color:var(--gray-400)">2月15日（第6天）· 计划</div>
+              <div class="timeline-title" style="color:var(--gray-500)">疗程结束评估</div>
+              <div class="timeline-desc">5天用药疗程结束，需评估治疗效果。若症状未明显改善需调整方案。</div>
+            </div>
+          </div>
+        </div>
+        <div style="height:20px"></div>
+      </div>
+    </div>
+
+    <!-- AI CHAT PAGE -->
+    <div class="page" id="page-chat">
+      <div class="chat-header">
+        <div class="back-btn" onclick="switchTab('home')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </div>
+        <div class="chat-header-info">
+          <div class="chat-header-title">AI 病历录入</div>
+          <div class="chat-header-status">正在收集信息</div>
+        </div>
+        <div class="memory-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          记忆已加载
+        </div>
+      </div>
+      <!-- Session bar showing 1:1 record binding -->
+      <div class="chat-session-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        绑定病历: <span class="session-record">PR20260210003</span>
+        <span style="margin-left:auto">会话 #3</span>
+      </div>
+      <!-- Similar Cases Panel -->
+      <div class="similar-cases-panel" onclick="this.querySelector('.similar-cases-list').style.display = this.querySelector('.similar-cases-list').style.display === 'none' ? 'block' : 'none'">
+        <div class="similar-cases-header">
+          <div class="similar-cases-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            相似病例参考 (3)
+          </div>
+          <span class="similar-cases-toggle">展开</span>
+        </div>
+        <div class="similar-cases-list" style="display:none">
+          <div class="similar-case-item">
+            <div class="similar-case-info">
+              <span class="similar-case-no">PR20260115012</span>
+              <span class="similar-case-diag">蛋鸡 · 罗曼灰 - 新城疫确诊</span>
+            </div>
+            <span class="similar-case-score">78%</span>
+          </div>
+          <div class="similar-case-item">
+            <div class="similar-case-info">
+              <span class="similar-case-no">PR20251228008</span>
+              <span class="similar-case-diag">肉鸡 · 白羽 - 非典型新城疫</span>
+            </div>
+            <span class="similar-case-score">65%</span>
+          </div>
+          <div class="similar-case-item">
+            <div class="similar-case-info">
+              <span class="similar-case-no">PR20251105017</span>
+              <span class="similar-case-diag">蛋鸡 · 海兰褐 - 新城疫（II型）</span>
+            </div>
+            <span class="similar-case-score">58%</span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-scroll">
+        <!-- System memory notice -->
+        <div style="text-align:center;padding:8px 0">
+          <div style="display:inline-flex;align-items:center;gap:6px;background:#f3e8ff;color:#7c3aed;font-size:11px;padding:4px 12px;border-radius:var(--radius-full);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            已从记忆中读取: 该场海兰褐蛋鸡5000只，新城疫疑似，正在治疗第3天
+          </div>
+        </div>
+
+        <div class="chat-message assistant">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-bubble">
+              李医生您好，我已从记忆中读取了该病例的历史信息。这是您第3次就该病例与我对话。
+              <br><br>
+              <b>当前状态回顾：</b><br>
+              阳光禽业养殖场的海兰褐蛋鸡新城疫疑似病例，已执行隔离并开始用药第2天（黄芪多糖+阿莫西林），昨日死亡数降至5只。
+              <br><br>
+              今天有什么新的情况需要记录吗？
+            </div>
+            <div class="chat-time">08:15</div>
+          </div>
+        </div>
+
+        <div class="chat-message user">
+          <div class="chat-avatar">李</div>
+          <div>
+            <div class="chat-bubble">
+              今天去看了一下，采食量恢复了大概20%，精神状态比昨天好一些。今天没有新增死亡。但是还有部分鸡有呼吸道症状，拉稀也还没完全好。
+            </div>
+            <div class="chat-time">08:16</div>
+          </div>
+        </div>
+
+        <div class="chat-message assistant">
+          <div class="chat-avatar">AI</div>
+          <div>
+            <div class="chat-bubble">
+              恢复趋势不错，死亡停止是好信号。参考相似病例 <span style="color:#b45309;font-size:12px">PR20260115012</span> 的治疗经验，建议继续当前方案。我来帮您更新今天的记录：
+              <div class="extracted-info">
+                <div class="extracted-info-title">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/></svg>
+                  今日更新
+                </div>
+                <div class="extracted-item"><span>采食量: 恢复约20%</span><span class="confidence-dot high"></span></div>
+                <div class="extracted-item"><span>精神状态: 好转</span><span class="confidence-dot high"></span></div>
+                <div class="extracted-item"><span>今日死亡: 0只</span><span class="confidence-dot high"></span></div>
+                <div class="extracted-item"><span>呼吸道症状: 部分仍有</span><span class="confidence-dot high"></span></div>
+                <div class="extracted-item"><span>排粪: 稀粪未完全恢复</span><span class="confidence-dot high"></span></div>
+              </div>
+              <br>
+              建议继续当前方案，还剩3天疗程。您有拍今天鸡群状况的照片或视频吗？可以上传归档到今天的治疗记录中。
+              <br><br>
+              <div style="background:#f3e8ff;border:1px solid #e9d5ff;border-radius:8px;padding:8px 10px;font-size:11px;color:#7c3aed;">
+                <b>记忆已更新：</b>第3天采食量恢复20%，死亡停止，呼吸道症状残留，继续用药。
+              </div>
+            </div>
+            <div class="chat-time">08:16</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-bar">
+        <div class="chat-input-tools">
+          <button class="chat-tool-btn" title="语音输入">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <button class="chat-tool-btn" title="上传图片/视频">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          </button>
+        </div>
+        <textarea class="chat-text-input" placeholder="输入消息..." rows="1">拍了几张照片，我传一下</textarea>
+        <button class="chat-send-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- REMINDERS PAGE -->
+    <div class="page" id="page-reminders">
+      <div class="list-page-header">
+        AI 提醒
+        <span style="font-size:12px;color:var(--gray-400);font-weight:400">今日 3 项</span>
+      </div>
+      <div class="records-scroll" style="padding:16px 20px">
+        <!-- Today's reminders -->
+        <div style="font-size:12px;color:var(--gray-400);font-weight:500;margin-bottom:8px">今天 · 2月12日</div>
+        <div class="reminder-card">
+          <div class="reminder-header">
+            <div class="reminder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="reminder-title">PR003 新城疫疑似</div>
+            <div class="reminder-time">08:00</div>
+          </div>
+          <div class="reminder-list">
+            <div class="reminder-item">
+              <div class="reminder-item-dot urgent"></div>
+              <span>阿莫西林+黄芪多糖 第3天/共5天，继续按方案给药</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot urgent"></div>
+              <span>关注死亡率趋势（昨日5只→今日？），若回升需调整方案</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot normal"></div>
+              <span>实验室送检结果应回，确认是否为新城疫</span>
+            </div>
+            <div class="reminder-item">
+              <div class="reminder-item-dot info"></div>
+              <span>记录今日采食量、饮水量、粪便情况，拍照存档</span>
+            </div>
+          </div>
+          <div class="reminder-action">
+            <button class="reminder-btn secondary" onclick="switchTab('chat')">打开对话</button>
+            <button class="reminder-btn primary">已确认</button>
+          </div>
+        </div>
+
+        <div class="reminder-card" style="background:linear-gradient(135deg,#f0faf4,#d4f0e0);border-color:#a8e0c0">
+          <div class="reminder-header">
+            <div class="reminder-icon" style="background:var(--green-500)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="reminder-title" style="color:var(--green-800)">PR002 禽霍乱</div>
+            <div class="reminder-time" style="color:var(--green-600)">09:00</div>
+          </div>
+          <div class="reminder-list">
+            <div class="reminder-item" style="color:var(--green-800)">
+              <div class="reminder-item-dot normal"></div>
+              <span>今日为复诊日（治疗后第7天），需回访检查恢复情况</span>
+            </div>
+            <div class="reminder-item" style="color:var(--green-800)">
+              <div class="reminder-item-dot info"></div>
+              <span>上次记录显示症状已基本消失，确认是否可结案</span>
+            </div>
+          </div>
+          <div class="reminder-action">
+            <button class="reminder-btn secondary" style="background:rgba(45,157,94,0.12);color:var(--green-700)" onclick="switchTab('chat')">打开对话</button>
+            <button class="reminder-btn primary" style="background:var(--green-500)">已确认</button>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:var(--gray-400);font-weight:500;margin-bottom:8px;margin-top:12px">昨天 · 2月11日</div>
+        <div class="reminder-card" style="opacity:0.6">
+          <div class="reminder-header">
+            <div class="reminder-icon" style="background:var(--gray-300)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="reminder-title" style="color:var(--gray-500)">PR003 新城疫疑似 · 已完成</div>
+            <div class="reminder-time" style="color:var(--gray-400)">08:00</div>
+          </div>
+          <div class="reminder-list">
+            <div class="reminder-item" style="color:var(--gray-500);text-decoration:line-through">
+              <div class="reminder-item-dot" style="background:var(--gray-300)"></div>
+              <span>开始黄芪多糖+阿莫西林治疗方案</span>
+            </div>
+            <div class="reminder-item" style="color:var(--gray-500);text-decoration:line-through">
+              <div class="reminder-item-dot" style="background:var(--gray-300)"></div>
+              <span>执行环境消毒，拍照记录</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="profile-header-bg">
+        <div class="profile-avatar">李</div>
+        <div class="profile-info">
+          <div class="profile-name">李兽医</div>
+          <div class="profile-role">执业兽医师 · 执照号 A0137020001</div>
+        </div>
+      </div>
+      <div class="profile-scroll">
+        <div class="profile-stats">
+          <div class="profile-stat">
+            <div class="profile-stat-num">128</div>
+            <div class="profile-stat-label">病历数</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-num">36</div>
+            <div class="profile-stat-label">AI对话</div>
+          </div>
+          <div class="profile-stat">
+            <div class="profile-stat-num">15</div>
+            <div class="profile-stat-label">养殖场</div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-item">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <span class="menu-text">个人资料</span>
+            <div class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <span class="menu-text">账号安全</span>
+            <div class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+            <span class="menu-text">系统设置</span>
+            <div class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="menu-group">
+          <div class="menu-item">
+            <div class="menu-icon" style="background:#e8f5e9;color:var(--green-600)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <span class="menu-text">帮助与反馈</span>
+            <div class="menu-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></div>
+          </div>
+        </div>
+
+        <div style="text-align:center; padding:20px; font-size:12px; color:var(--gray-300);">
+          禽病诊疗系统 v1.0.0
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar" id="tab-bar" style="display:none">
+    <div class="tab-item active" data-tab="home" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>首页</span>
+    </div>
+    <div class="tab-item" data-tab="records" onclick="switchTab('records')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      <span>病历</span>
+    </div>
+    <div class="tab-item tab-item-center" onclick="switchTab('chat')">
+      <div class="tab-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      </div>
+      <span>录入</span>
+    </div>
+    <div class="tab-item" data-tab="reminders" onclick="switchTab('reminders')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span>提醒</span>
+    </div>
+    <div class="tab-item" data-tab="profile" onclick="switchTab('profile')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>我的</span>
+    </div>
+  </div>
+
+  <!-- Home Bar -->
+  <div class="phone-home-bar"></div>
+</div>
+
+<!-- Navigation hint -->
+<div class="page-nav-hint">
+  点击「登 录」进入 · 底部导航切换页面 · 病历页「语义」按钮切换AI搜索 · 对话页展开相似病例
+</div>
+
+<script>
+  let currentTab = 'login';
+  let detailVisible = false;
+
+  function navigateTo(page) {
+    if (page === 'home') {
+      document.getElementById('page-login').classList.remove('active');
+      document.getElementById('page-home').classList.add('active');
+      document.getElementById('tab-bar').style.display = 'flex';
+      currentTab = 'home';
+      updateTabs();
+    }
+  }
+
+  function switchTab(tab) {
+    if (detailVisible && tab !== 'detail') {
+      hideDetail();
+      return;
+    }
+    const pages = ['home', 'records', 'chat', 'reminders', 'profile'];
+    pages.forEach(p => {
+      const el = document.getElementById('page-' + p);
+      if (el) {
+        el.classList.remove('active');
+        el.classList.remove('slide-left');
+      }
+    });
+    document.getElementById('page-detail').classList.remove('active');
+
+    const target = document.getElementById('page-' + tab);
+    if (target) {
+      target.classList.add('active');
+    }
+    currentTab = tab;
+    updateTabs();
+  }
+
+  function updateTabs() {
+    document.querySelectorAll('.tab-item[data-tab]').forEach(item => {
+      item.classList.remove('active');
+      if (item.dataset.tab === currentTab) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+  function showDetail() {
+    detailVisible = true;
+    const current = document.getElementById('page-' + currentTab);
+    if (current) current.classList.add('slide-left');
+    setTimeout(() => {
+      document.getElementById('page-detail').classList.add('active');
+    }, 50);
+  }
+
+  function hideDetail() {
+    detailVisible = false;
+    document.getElementById('page-detail').classList.remove('active');
+    const current = document.getElementById('page-' + currentTab);
+    if (current) {
+      current.classList.remove('slide-left');
+      current.classList.add('active');
+    }
+  }
+
+  // Semantic search toggle
+  let searchMode = 'keyword';
+  function toggleSearchMode() {
+    const btn = document.getElementById('search-mode-btn');
+    const results = document.getElementById('semantic-results');
+    const filterBar = document.getElementById('filter-bar');
+    const input = document.getElementById('search-input-field');
+    if (searchMode === 'keyword') {
+      searchMode = 'semantic';
+      btn.textContent = '语义';
+      btn.classList.add('active');
+      input.placeholder = '描述症状进行语义搜索...';
+      results.style.display = 'block';
+      filterBar.style.display = 'none';
+    } else {
+      searchMode = 'keyword';
+      btn.textContent = '关键词';
+      btn.classList.remove('active');
+      input.placeholder = '搜索诊断、禽种、养殖场...';
+      results.style.display = 'none';
+      filterBar.style.display = 'flex';
+    }
+  }
+  function updateSearchPlaceholder() {}
+
+  // Auto-resize chat textarea
+  const textarea = document.querySelector('.chat-text-input');
+  if (textarea) {
+    textarea.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+    });
+  }
+</script>
+</body>
+</html>

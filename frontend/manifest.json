@@ -1,0 +1,30 @@
+{
+  "name": "禽病诊疗系统",
+  "appid": "",
+  "description": "禽类电子病历与AI诊疗助手",
+  "versionName": "1.0.0",
+  "versionCode": "100",
+  "transformPx": false,
+  "mp-weixin": {
+    "appid": "",
+    "setting": {
+      "urlCheck": false
+    },
+    "usingComponents": true
+  },
+  "h5": {
+    "devServer": {
+      "port": 5173,
+      "proxy": {
+        "/api": {
+          "target": "http://localhost:8000",
+          "changeOrigin": true
+        }
+      }
+    },
+    "title": "禽病诊疗系统",
+    "router": {
+      "mode": "hash"
+    }
+  }
+}

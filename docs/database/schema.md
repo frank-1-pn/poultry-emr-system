@@ -3,6 +3,8 @@
 ## 概述
 本系统采用PostgreSQL作为主数据库，存储结构化数据。病历内容采用JSON+Markdown混合格式存储。
 
+本系统共设计 **18张数据表**。
+
 ## 表结构设计
 
 ### 1. users (用户表)
@@ -49,6 +51,12 @@
 
 ### 3. medical_records (病历主表)
 存储病历核心信息
+
+**数据冗余策略说明**：本表采用"独立字段 + JSONB全量"双存储模式：
+- **独立字段**（如 `primary_diagnosis`, `poultry_type` 等）：用于数据库索引、查询过滤、排序，是查询的主要依据
+- **record_json**（JSONB）：存储完整的结构化病历数据，作为**数据源（Source of Truth）**
+- **record_markdown**：由 `record_json` 生成的可读文本，用于前端展示和全文搜索
+- **同步机制**：每次更新病历时，先更新 `record_json`，然后从中提取关键字段更新独立列，最后重新生成 `record_markdown`。此逻辑封装在 `record_service` 中统一处理
 
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
@@ -191,6 +199,12 @@
 ### 11. record_versions (病历版本表) 🆕
 病历版本快照
 
+**存储策略**：为避免大量完整快照导致存储膨胀：
+- 每10个版本保留一个完整快照（`snapshot` 字段非空）
+- 中间版本只存储差异（`diff` 字段），`snapshot` 置空
+- 版本1.0始终保留完整快照
+- 回溯旧版本时，从最近的完整快照 + 后续 diff 重建
+
 | 字段名 | 类型 | 说明 | 约束 |
 |--------|------|------|------|
 | id | UUID | 版本ID | PK |
@@ -277,7 +291,44 @@ AI对话消息记录
 }
 ```
 
-### 16. audit_logs (审计日志表)
+### 16. ai_models (AI模型配置表) 🆕
+AI模型配置信息
+
+| 字段名 | 类型 | 说明 | 约束 |
+|--------|------|------|------|
+| id | UUID | 模型ID | PK |
+| provider | VARCHAR(50) | 提供商 | NOT NULL |
+| model_name | VARCHAR(100) | 模型名称 | NOT NULL |
+| display_name | VARCHAR(100) | 显示名称 | NOT NULL |
+| api_endpoint | TEXT | API地址 | NOT NULL |
+| api_key_encrypted | TEXT | 加密API密钥 | NOT NULL |
+| is_active | BOOLEAN | 是否启用 | DEFAULT TRUE |
+| is_default | BOOLEAN | 是否默认模型 | DEFAULT FALSE |
+| config | JSONB | 模型配置参数 | |
+| usage_limit | JSONB | 使用限制 | |
+| created_at | TIMESTAMP | 创建时间 | NOT NULL |
+| updated_at | TIMESTAMP | 更新时间 | NOT NULL |
+| created_by | UUID | 创建人 | FK -> users.id |
+
+### 17. ai_usage_logs (AI使用日志表) 🆕
+AI模型调用日志
+
+| 字段名 | 类型 | 说明 | 约束 |
+|--------|------|------|------|
+| id | UUID | 日志ID | PK |
+| model_id | UUID | 模型ID | FK -> ai_models.id |
+| user_id | UUID | 用户ID | FK -> users.id |
+| conversation_id | UUID | 对话ID | FK -> conversations.id |
+| request_tokens | INTEGER | 请求token数 | |
+| response_tokens | INTEGER | 响应token数 | |
+| total_tokens | INTEGER | 总token数 | |
+| cost | DECIMAL(10,4) | 成本（元） | |
+| latency_ms | INTEGER | 响应延迟（毫秒） | |
+| status | VARCHAR(20) | 状态 | success/error/timeout |
+| error_message | TEXT | 错误信息 | |
+| created_at | TIMESTAMP | 创建时间 | NOT NULL |
+
+### 18. audit_logs (审计日志表)
 操作审计日志
 
 | 字段名 | 类型 | 说明 | 约束 |
@@ -334,6 +385,16 @@ CREATE INDEX idx_messages_timestamp ON conversation_messages(timestamp);
 CREATE INDEX idx_media_record ON media_files(record_id);
 CREATE INDEX idx_media_type ON media_files(file_type);
 
+-- ai_models表 🆕
+CREATE INDEX idx_models_provider ON ai_models(provider);
+CREATE INDEX idx_models_active ON ai_models(is_active);
+CREATE INDEX idx_models_default ON ai_models(is_default) WHERE is_default = TRUE;
+
+-- ai_usage_logs表 🆕
+CREATE INDEX idx_usage_model ON ai_usage_logs(model_id);
+CREATE INDEX idx_usage_user ON ai_usage_logs(user_id);
+CREATE INDEX idx_usage_date ON ai_usage_logs(created_at);
+
 -- 全文搜索索引
 CREATE INDEX idx_records_fulltext ON medical_records USING GIN(
   to_tsvector('simple', coalesce(record_markdown, ''))
@@ -347,8 +408,12 @@ USING ivfflat (embedding_vector vector_cosine_ops);
 ## 数据关系图
 
 ```
-users (兽医)
-  ├─ 1:N -> medical_records (病历)
+users (用户: Master/兽医)
+  ├─ 1:N -> medical_records (创建的病历, owner_id)
+  ├─ 1:N -> conversations (发起的对话)
+  ├─ 1:N -> record_permissions (被授权记录, user_id)
+  ├─ 1:N -> record_permissions (授权操作, granted_by)
+  ├─ 1:N -> ai_usage_logs (AI使用日志)
   └─ 1:N -> audit_logs (审计日志)
 
 farms (养殖场)
@@ -361,7 +426,16 @@ medical_records (病历)
   ├─ 1:N -> media_files (多媒体)
   ├─ 1:N -> lab_tests (实验室检测)
   ├─ 1:N -> follow_ups (随访)
-  └─ 1:N -> record_tags (标签)
+  ├─ 1:N -> record_tags (标签)
+  ├─ 1:N -> record_versions (版本历史) 🆕
+  ├─ 1:N -> record_permissions (授权记录) 🆕
+  └─ 1:N -> conversations (关联对话) 🆕
+
+conversations (AI对话) 🆕
+  └─ 1:N -> conversation_messages (对话消息)
+
+ai_models (AI模型配置) 🆕
+  └─ 1:N -> ai_usage_logs (使用日志)
 ```
 
 ## 扩展要求
@@ -370,13 +444,29 @@ medical_records (病历)
 - `uuid-ossp`: UUID生成
 - `pgvector`: 向量存储和搜索
 - `pg_trgm`: 模糊搜索
+- `zhparser` 或 `pg_jieba` (推荐): 中文分词支持
 
 ### 安装扩展
 ```sql
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "vector";
 CREATE EXTENSION IF NOT EXISTS "pg_trgm";
+
+-- 中文分词（二选一）
+-- 方案1: zhparser（推荐，需预先编译安装）
+CREATE EXTENSION IF NOT EXISTS "zhparser";
+CREATE TEXT SEARCH CONFIGURATION chinese (PARSER = zhparser);
+ALTER TEXT SEARCH CONFIGURATION chinese ADD MAPPING FOR n,v,a,i,e,l WITH simple;
+
+-- 方案2: 使用 'simple' 配置 + jieba 在应用层分词后存入
+-- 适合无法安装 zhparser 扩展的环境
 ```
+
+### 中文全文搜索说明
+默认的 `'simple'` tsvector 配置只按空格分词，对中文支持不佳。建议：
+1. **优先方案**：安装 `zhparser` 扩展，将全文搜索索引改为 `to_tsvector('chinese', ...)`
+2. **备选方案**：在应用层使用 jieba 分词后，将分词结果（空格分隔）存入专用字段，再用 `'simple'` 配置索引
+3. **终极方案**：对搜索质量要求高时，引入 Elasticsearch + IK 分词器作为专用搜索引擎
 
 ## 数据迁移
 使用Alembic进行数据库版本管理和迁移。

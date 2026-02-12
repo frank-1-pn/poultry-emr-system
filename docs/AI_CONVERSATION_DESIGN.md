@@ -47,10 +47,15 @@ recorderManager.onStop((res) => {
 ### AI对话引擎
 
 #### LLM选择
-**推荐：OpenAI GPT-4o / Claude 3.5 Sonnet**
-- 理解能力强，能准确提取医疗信息
-- 支持Function Calling，便于结构化输出
-- 中文理解和生成质量高
+系统支持多种AI模型，由Master管理员统一配置（详见 [AI_MODEL_CONFIGURATION.md](AI_MODEL_CONFIGURATION.md)）：
+- **通义千问** (推荐默认) - 中文能力强，国内访问稳定
+- **MiniMax** - 国产模型，性价比高
+- **Kimi** - 超长上下文200K
+- **腾讯混元** - 腾讯生态集成
+- **ChatGPT** (GPT-4o) - 综合能力最强，Function Calling完善
+- **Claude** - 逻辑推理优秀，长上下文支持
+- **Gemini** - 多模态能力强
+- **DeepSeek** - 成本最低
 
 #### Prompt设计
 
@@ -570,6 +575,48 @@ export default {
     <VoiceRecorder @send="sendMessage" />
   </view>
 </template>
+```
+
+## 微信小程序 WebSocket 限制与应对
+
+### 已知限制
+1. **同时只能存在1个 WebSocket 连接**：小程序全局只允许一个 WebSocket 实例
+2. **包大小限制**：单条消息不宜超过 256KB
+3. **连接超时**：长时间无数据传输可能被微信断开
+4. **网络切换**：WiFi/4G切换时连接会断开
+
+### 应对方案
+1. **连接管理**：全局单例管理 WebSocket 连接，确保同一时间只有一个对话使用
+2. **心跳保活**：每30秒发送心跳包，防止连接超时断开
+3. **断线重连**：检测到连接断开后自动重连，重连后发送最后一条消息的ID，服务端补发遗漏消息
+4. **降级方案**：WebSocket 连接失败时，降级为 HTTP 轮询模式（每2秒轮询一次），保证功能可用
+5. **消息确认**：每条消息带序列号，客户端确认收到后服务端才标记为已发送
+
+```javascript
+// WebSocket 管理器（简化示例）
+class WSManager {
+  reconnectAttempts = 0
+  maxReconnects = 5
+
+  connect(url) {
+    this.ws = wx.connectSocket({ url })
+    this.startHeartbeat()
+  }
+
+  startHeartbeat() {
+    this.heartbeatTimer = setInterval(() => {
+      this.ws.send({ data: JSON.stringify({ type: 'ping' }) })
+    }, 30000)
+  }
+
+  onClose() {
+    if (this.reconnectAttempts < this.maxReconnects) {
+      setTimeout(() => this.connect(this.url), 2000 * ++this.reconnectAttempts)
+    } else {
+      this.fallbackToPolling()  // 降级为HTTP轮询
+    }
+  }
+}
 ```
 
 ## 性能优化
